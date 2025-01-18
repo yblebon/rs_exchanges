@@ -9,9 +9,6 @@ use url::Url;
 pub async fn subscribe_to_pair(pair: &str) {
     let mut ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair);
     println!("{}", ws_url);
-    // let url = Url::parse(&ws_url);
-    // let Ok((ws_stream, _)) = connect_async(url).await;
-    // let (mut write, mut read) = ws_stream.split();
 
     let mut request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
