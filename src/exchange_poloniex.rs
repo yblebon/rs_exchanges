@@ -12,7 +12,7 @@ pub async fn subscribe_to_pair(pair: &str) {
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
     // level 2
-    let msg = json!({"event": "subscribe", "channel": ["book"], "symbols": ["BTC_USDT"]});
+    let msg = json!({"event": "subscribe", "channel": ["book"], "symbols": [format!("{}", pair)]});
 
     let (mut write, mut read) = ws_stream.split();
 

@@ -7,11 +7,11 @@ use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use url::Url;
 
 pub async fn subscribe_to_pair(pair: &str) {
-    let mut ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair);
+    let mut ws_url = format!("wss://stream.bybit.com/v5/public/spot");
     let mut request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
-    let msg = json!({"req_id": "test", "op": "subscribe", "args": ["orderbook.1.BTCUSDT"]});
+    let msg = json!({"req_id": "test", "op": "subscribe", "args": [format!("orderbook.1.{}", pair)]});
 
     let (mut write, mut read) = ws_stream.split();
 

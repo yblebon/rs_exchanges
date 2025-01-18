@@ -15,19 +15,22 @@ async fn main() {
     // parameters
     let args: Vec<String> = env::args().collect();
 
-    match args[1].as_str() {
+    match args[1].to_lowercase().as_str() {
         "binance" => {
-            let pair = args[2].replace("_", "");
+            let pair = args[2].to_uppercase().replace("_", "");
             exchange_binance::subscribe_to_pair(&pair).await;
         }
         "bybit" => {
-            exchange_bybit::subscribe_to_pair(&args[2]).await;
+            let pair = args[2].to_uppercase().replace("_", "");
+            exchange_bybit::subscribe_to_pair(&pair).await;
         }
         "kraken" => {
-            exchange_kraken::subscribe_to_pair(&args[2]).await;
+            let pair = args[2].to_uppercase().replace("_", "/");
+            exchange_kraken::subscribe_to_pair(&pair).await;
         }
         "poloniex" => {
-            exchange_poloniex::subscribe_to_pair(&args[2]).await;
+            let pair = args[2].to_uppercase();
+            exchange_poloniex::subscribe_to_pair(&pair).await;
         }
         _ => {
             println!("unknown exhange: {}", args[1])
