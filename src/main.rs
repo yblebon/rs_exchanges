@@ -7,6 +7,7 @@ use url::Url;
 
 mod exchange_binance;
 mod exchange_bybit;
+mod exchange_kraken;
 
 #[tokio::main]
 async fn main() {
@@ -19,6 +20,9 @@ async fn main() {
         }
         "bybit" => {
             exchange_bybit::subscribe_to_pair(&args[2]).await;
+        }
+        "kraken" => {
+            exchange_kraken::subscribe_to_pair(&args[2]).await;
         }
         _ => {
             println!("unknown exhange: {}", args[1])
