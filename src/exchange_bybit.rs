@@ -1,17 +1,16 @@
 use futures_util::{SinkExt, StreamExt};
 use serde_json::json;
 use serde_json::Value;
-use std::env;
-use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
-use url::Url;
+use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
 pub async fn subscribe_to_pair(pair: &str) {
-    let mut ws_url = format!("wss://stream.bybit.com/v5/public/spot");
-    let mut request = ws_url.into_client_request().unwrap();
+    let ws_url = format!("wss://stream.bybit.com/v5/public/spot");
+    let request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
-    let msg = json!({"req_id": "test", "op": "subscribe", "args": [format!("orderbook.1.{}", pair)]});
+    let msg =
+        json!({"req_id": "test", "op": "subscribe", "args": [format!("orderbook.1.{}", pair)]});
 
     let (mut write, mut read) = ws_stream.split();
 

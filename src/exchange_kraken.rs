@@ -1,14 +1,12 @@
 use futures_util::{SinkExt, StreamExt};
 use serde_json::json;
 use serde_json::Value;
-use std::env;
-use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
-use url::Url;
+use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
 pub async fn subscribe_to_pair(pair: &str) {
-    let mut ws_url = format!("wss://ws.kraken.com/v2");
-    let mut request = ws_url.into_client_request().unwrap();
+    let ws_url = format!("wss://ws.kraken.com/v2");
+    let request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
     // level 2
@@ -19,7 +17,6 @@ pub async fn subscribe_to_pair(pair: &str) {
     if let Err(e) = write.send(Message::Text(msg.to_string())).await {
         eprintln!("Failed to send subscription message: {}", e);
     }
-
 
     while let Some(message) = read.next().await {
         match message {

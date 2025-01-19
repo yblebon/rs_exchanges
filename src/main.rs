@@ -1,9 +1,5 @@
-use futures_util::{SinkExt, StreamExt};
-use serde_json::json;
-use serde_json::Value;
+use futures_util::StreamExt;
 use std::env;
-use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
-use url::Url;
 
 mod exchange_binance;
 mod exchange_bybit;
