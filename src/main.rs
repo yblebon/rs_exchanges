@@ -10,26 +10,28 @@ mod exchange_poloniex;
 async fn main() {
     // parameters
     let args: Vec<String> = env::args().collect();
+    let parts: Vec<&str> = args[1].split("__").collect();
+    let exchange = parts[0].to_lowercase();
 
-    match args[1].to_lowercase().as_str() {
+    match exchange.as_str() {
         "binance" => {
-            let pair = args[2].to_uppercase().replace("_", "");
+            let pair = parts[1].to_uppercase().replace("_", "");
             exchange_binance::subscribe_to_pair(&pair).await;
         }
         "bybit" => {
-            let pair = args[2].to_uppercase().replace("_", "");
+            let pair = parts[1].to_uppercase().replace("_", "");
             exchange_bybit::subscribe_to_pair(&pair).await;
         }
         "kraken" => {
-            let pair = args[2].to_uppercase().replace("_", "/");
+            let pair = parts[1].to_uppercase().replace("_", "/");
             exchange_kraken::subscribe_to_pair(&pair).await;
         }
         "poloniex" => {
-            let pair = args[2].to_uppercase();
+            let pair = parts[1].to_uppercase();
             exchange_poloniex::subscribe_to_pair(&pair).await;
         }
         _ => {
-            println!("unknown exhange: {}", args[1])
+            println!("unknown exhange: {}", parts[0])
         }
     }
 }
