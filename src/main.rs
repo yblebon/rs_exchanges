@@ -6,6 +6,9 @@ mod exchange_bybit;
 mod exchange_kraken;
 mod exchange_poloniex;
 
+mod event;
+use event::Ticker;
+
 #[tokio::main]
 async fn main() {
     // parameters
