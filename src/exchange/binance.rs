@@ -3,8 +3,6 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
-use super::event::Ticker;
-
 pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let mut ws_url = format!(
         "wss://stream.binance.com:9443/ws/{}@bookTicker",
@@ -47,14 +45,14 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
                         Ok(json) => {
                             println!("Parsed JSON: {:?}", json);
                             let ask_qty = json["A"].as_f64();
-                            
+
                             let bid_qty = json["B"].as_f64();
-                                
+
                             let ask_price = json["a"].as_f64();
                             let bid_price = json["b"].as_f64();
-                                
-                            println!("Event: {:?}", ask_qty);   
-                            // Ticker::new("binance".to_string(), pair.to_string(), ask_price, ask_qty, bid_price, bid_qty); 
+
+                            println!("Event: {:?}", ask_qty);
+                            // Ticker::new("binance".to_string(), pair.to_string(), ask_price, ask_qty, bid_price, bid_qty);
                         }
                         Err(e) => {
                             eprintln!("Failed to parse JSON: {}", e);
