@@ -9,8 +9,23 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
-    let msg =
-        json!({"req_id": "test", "op": "subscribe", "args": [format!("orderbook.1.{}", pair)]});
+    let mut msg = json!({"req_id": "test", "op": "subscribe", "args": [format!("tickers.{}", pair)]});
+
+    match level {
+	1 => {
+	msg = json!({"req_id": "test", "op": "subscribe", "args": [format!("tickers.{}", pair)]});
+        }
+        2 => { 
+	msg = json!({"req_id": "test", "op": "subscribe", "args": [format!("orderbook.1.{}", pair)]});
+        }
+        3 => {
+         println!("unrecognized level: {}", level); 
+        }
+        _  => {
+          println!("unrecognized level: {}", level);
+        }
+      
+    }
 
     let (mut write, mut read) = ws_stream.split();
 
