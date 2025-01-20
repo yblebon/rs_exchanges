@@ -11,24 +11,28 @@ async fn main() {
     // parameters
     let args: Vec<String> = env::args().collect();
     let parts: Vec<&str> = args[1].split("__").collect();
-    let exchange = parts[0].to_lowercase();
+    let pair_level: Vec<&str> = parts[1].split(":").collect();
+
+    let mut pair = pair_level[0].to_uppercase();
+    let level: u8 = pair_level[1].parse().unwrap();
+    let exchange = parts[0].to_uppercase();
+
 
     match exchange.as_str() {
-        "binance" => {
-            let pair = parts[1].to_uppercase().replace("_", "");
-            exchange_binance::subscribe_to_pair(&pair).await;
+        "BINANCE" => {
+            pair = pair.replace("_", "");
+            exchange_binance::subscribe_to_pair(&pair, &level).await;
         }
-        "bybit" => {
-            let pair = parts[1].to_uppercase().replace("_", "");
-            exchange_bybit::subscribe_to_pair(&pair).await;
+        "BYBIT" => {
+            pair = pair.replace("_", "");
+            exchange_bybit::subscribe_to_pair(&pair, &level).await;
         }
-        "kraken" => {
-            let pair = parts[1].to_uppercase().replace("_", "/");
-            exchange_kraken::subscribe_to_pair(&pair).await;
+        "KRAKEN" => {
+            pair = pair.replace("_", "/");
+            exchange_kraken::subscribe_to_pair(&pair, &level).await;
         }
-        "poloniex" => {
-            let pair = parts[1].to_uppercase();
-            exchange_poloniex::subscribe_to_pair(&pair).await;
+        "POLONIEX" => {
+            exchange_poloniex::subscribe_to_pair(&pair, &level).await;
         }
         _ => {
             println!("unknown exhange: {}", parts[0])

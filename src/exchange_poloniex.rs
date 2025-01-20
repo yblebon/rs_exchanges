@@ -4,7 +4,7 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
-pub async fn subscribe_to_pair(pair: &str) {
+pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let ws_url = format!("wss://ws.poloniex.com/ws/public");
     let request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();

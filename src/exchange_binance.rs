@@ -3,7 +3,7 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
-pub async fn subscribe_to_pair(pair: &str) {
+pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair);
     println!("{}", ws_url);
 
