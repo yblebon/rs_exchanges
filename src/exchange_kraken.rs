@@ -13,20 +13,20 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let mut msg = json!({"method": "subscribe", "params": {"channel": "ticker", "symbol": [format!("{}", pair)]}});
 
     match level {
-      1 => {
-	println!("level1: ticker best bid and best qty");
-      }
-      2 => {
-	println!("level2: ordered book aggregated by qty");
-        msg = json!({"method": "subscribe", "params": {"channel": "book", "symbol": [format!("{}", pair)]}});
-      }
-      3 => { 
-	println!("level3: book individual orders");
-        msg = json!({"method": "subscribe", "params": {"channel": "level3", "symbol": [format!("{}", pair)]}});
-      }
-      _  => {
-	println!("unrecognized level: {}", level);
-      }
+        1 => {
+            println!("level1: ticker best bid and best qty");
+        }
+        2 => {
+            println!("level2: ordered book aggregated by qty");
+            msg = json!({"method": "subscribe", "params": {"channel": "book", "symbol": [format!("{}", pair)]}});
+        }
+        3 => {
+            println!("level3: book individual orders");
+            msg = json!({"method": "subscribe", "params": {"channel": "level3", "symbol": [format!("{}", pair)]}});
+        }
+        _ => {
+            println!("unrecognized level: {}", level);
+        }
     }
 
     let (mut write, mut read) = ws_stream.split();

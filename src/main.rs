@@ -17,7 +17,6 @@ async fn main() {
     let level: u8 = pair_level[1].parse().unwrap();
     let exchange = parts[0].to_uppercase();
 
-
     match exchange.as_str() {
         "BINANCE" => {
             pair = pair.replace("_", "");

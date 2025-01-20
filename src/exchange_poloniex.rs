@@ -10,22 +10,22 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
     let (ws_stream, _) = connect_async(request).await.unwrap();
 
     // level 2
-    let mut  msg = json!({"event": "subscribe", "channel": ["book"], "symbols": [format!("{}", pair)]});
+    let mut msg =
+        json!({"event": "subscribe", "channel": ["book"], "symbols": [format!("{}", pair)]});
 
     match level {
         1 => {
-           msg = json!({"event": "subscribe", "channel": ["ticker"], "symbols": [format!("{}", pair)]});
-	}
+            msg = json!({"event": "subscribe", "channel": ["ticker"], "symbols": [format!("{}", pair)]});
+        }
         2 => {
-           msg = json!({"event": "subscribe", "channel": ["book_lv2"], "symbols": [format!("{}", pair)]});
+            msg = json!({"event": "subscribe", "channel": ["book_lv2"], "symbols": [format!("{}", pair)]});
         }
         3 => {
-           msg = json!({"event": "subscribe", "channel": ["book"], "symbols": [format!("{}", pair)]});
+            msg = json!({"event": "subscribe", "channel": ["book"], "symbols": [format!("{}", pair)]});
         }
-        _  => {
-          println!("unrecognized level: {}", level);
+        _ => {
+            println!("unrecognized level: {}", level);
         }
-
     }
 
     let (mut write, mut read) = ws_stream.split();
