@@ -4,7 +4,23 @@ use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
 pub async fn subscribe_to_pair(pair: &str, level: &u8) {
-    let ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair);
+    let mut  ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair.to_lowercase());
+
+    match level {
+      1 =>  {
+        ws_url = format!("wss://stream.binance.com:9443/ws/{}@bookTicker", pair.to_lowercase());
+      }
+      2 =>  { 
+	ws_url = format!("wss://stream.binance.com:9443/ws/{}@depth", pair.to_lowercase());
+      }
+      3 =>  { 
+	println!("unrecognized level: {}", level);
+      }
+      _  => {
+        println!("unrecognized level: {}", level);
+      }
+    } 
+
     println!("{}", ws_url);
 
     let request = ws_url.into_client_request().unwrap();
