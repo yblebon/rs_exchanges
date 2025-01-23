@@ -3,7 +3,12 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
-pub async fn subscribe_to_pair(pair: &str, level: &u8) {
+use crate::event::Ticker;
+
+pub async fn subscribe_to_pair<F>(pair: String, level: u8, cb: F)
+where
+    F: Fn(Value),
+{
     let mut ws_url = format!(
         "wss://stream.binance.com:9443/ws/{}@bookTicker",
         pair.to_lowercase()
@@ -43,16 +48,29 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
                 if msg.is_text() || msg.is_binary() {
                     match serde_json::from_str::<Value>(&msg.into_text().unwrap()) {
                         Ok(json) => {
-                            println!("Parsed JSON: {:?}", json);
-                            let ask_qty = json["A"].as_f64();
-
-                            let bid_qty = json["B"].as_f64();
-
-                            let ask_price = json["a"].as_f64();
-                            let bid_price = json["b"].as_f64();
-
-                            println!("Event: {:?}", ask_qty);
-                            // Ticker::new("binance".to_string(), pair.to_string(), ask_price, ask_qty, bid_price, bid_qty);
+                            // println!("Parsed JSON: {:?}", json);
+                            match level {
+                                1 => {
+                                    let ask_qty: f32 = json["A"].as_str().unwrap().parse().unwrap();
+                                    let bid_qty: f32 = json["B"].as_str().unwrap().parse().unwrap();
+                                    let ask_price: f32 =
+                                        json["a"].as_str().unwrap().parse().unwrap();
+                                    let bid_price: f32 =
+                                        json["b"].as_str().unwrap().parse().unwrap();
+                                    let seq: u64 = json["u"].as_i64().unwrap() as u64;
+                                    let t = Ticker::new(
+                                        "binance".to_string(),
+                                        pair.to_string(),
+                                        ask_price,
+                                        ask_qty,
+                                        bid_price,
+                                        bid_qty,
+                                        seq,
+                                    );
+                                    cb(json);
+                                }
+                                _ => {}
+                            }
                         }
                         Err(e) => {
                             eprintln!("Failed to parse JSON: {}", e);

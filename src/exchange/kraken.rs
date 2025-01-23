@@ -4,7 +4,10 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
-pub async fn subscribe_to_pair(pair: &str, level: &u8) {
+pub async fn subscribe_to_pair<F>(pair: String, level: u8, cb: F)
+where
+    F: Fn(Value),
+{
     let ws_url = format!("wss://ws.kraken.com/v2");
     let request = ws_url.into_client_request().unwrap();
     let (ws_stream, _) = connect_async(request).await.unwrap();
@@ -42,6 +45,7 @@ pub async fn subscribe_to_pair(pair: &str, level: &u8) {
                     match serde_json::from_str::<Value>(&msg.into_text().unwrap()) {
                         Ok(json) => {
                             println!("Parsed JSON: {:?}", json);
+                            cb(json);
                         }
                         Err(e) => {
                             eprintln!("Failed to parse JSON: {}", e);
